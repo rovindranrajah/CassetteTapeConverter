@@ -12,7 +12,7 @@ public class CassetteTapeConverter extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Ccassette Tape Converter");
+        stage.setTitle("Cassette Tape Converter");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
