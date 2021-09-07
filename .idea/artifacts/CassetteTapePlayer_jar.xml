@@ -2,7 +2,7 @@
   <artifact type="jar" name="CassetteTapePlayer:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/CassetteTapePlayer_jar</output-path>
     <root id="archive" name="CassetteTapePlayer.jar">
-      <element id="module-output" name="CassetteTapePlayer" />
+      <element id="module-output" name="CassetteTapeConverter" />
       <element id="extracted-dir" path="D:/JavaFX/javafx-sdk-16/lib/javafx-swt.jar" path-in-jar="/" />
       <element id="extracted-dir" path="D:/JavaFX/javafx-sdk-16/lib/javafx.base.jar" path-in-jar="/" />
       <element id="extracted-dir" path="D:/JavaFX/javafx-sdk-16/lib/javafx.controls.jar" path-in-jar="/" />

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CassetteTapePlayer.iml" filepath="$PROJECT_DIR$/CassetteTapePlayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CassetteTapeConverter.iml" filepath="$PROJECT_DIR$/CassetteTapeConverter.iml" />
     </modules>
   </component>
 </project>
