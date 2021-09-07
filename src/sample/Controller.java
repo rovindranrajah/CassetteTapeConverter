@@ -34,7 +34,7 @@ public class Controller implements Initializable {
             DataLine.Info dataInfo = new DataLine.Info(TargetDataLine.class, format);
 
             if(!AudioSystem.isLineSupported(dataInfo)){
-                System.out.println("Not ssupported");
+                System.out.println("Not supported");
             }
             targetLine = (TargetDataLine) AudioSystem.getLine(dataInfo);
             return targetLine;
