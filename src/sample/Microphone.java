@@ -15,6 +15,12 @@ public class Microphone {
     private HashMap<String, Line> targetLines = null;
     private String path;
 
+    public Microphone(){
+        this.path = "record.wav";
+        targetLines = getTargetLines();
+        targetLine = (TargetDataLine) targetLines.get("Default");
+    }
+
     public Microphone(String path){
         this.path = path;
         targetLines = getTargetLines();
@@ -77,6 +83,7 @@ public class Microphone {
                 }
             }
         };
+
         audioRecorderThread.start();
     }
 
