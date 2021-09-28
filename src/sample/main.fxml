@@ -33,7 +33,7 @@
         </MenuBar>
         <Label layoutX="45.0" layoutY="63.0" text="Audio Line: " />
         <ChoiceBox fx:id="audioLine" layoutX="145.0" layoutY="59.0" prefHeight="26.0" prefWidth="271.0" />
-        <Button layoutX="50.0" layoutY="147.0" mnemonicParsing="false" text="Play/Pause" />
+        <Button fx:id="playPause" layoutX="50.0" layoutY="147.0" mnemonicParsing="false" onAction="#playPause" text="Play/Pause" />
         <Button fx:id="stopButton" layoutX="142.0" layoutY="147.0" mnemonicParsing="false" onAction="#stop" text="Stop" />
         <Button fx:id="startButton" layoutX="204.0" layoutY="147.0" mnemonicParsing="false" onAction="#start" text="Record" />
         <Slider layoutX="458.0" layoutY="153.0" prefHeight="14.0" prefWidth="226.0" />
