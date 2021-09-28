@@ -1,31 +1,34 @@
 package sample;
 
-import javafx.application.Platform;
+import com.groupdocs.metadata.Metadata;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
-import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class Controller implements Initializable {
     @FXML private ChoiceBox <String> audioLine;
     @FXML private Label status;
     @FXML public  Label hourLabel, minuteLabel, secondLabel,  milliLabel;
-    //Label status2;
+
     Integer num = 1;
 
     private StopwatchTimer timer;
 
     String path = "recording.wav";
     Microphone microphone = new Microphone(path);
-
+    File recording;
+    AudioInputStream audioStream;
+    Clip clip;
+    boolean play = false;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         audioLine.getItems().addAll(microphone.getTargetLines().keySet());
@@ -45,10 +48,33 @@ public class Controller implements Initializable {
         status.setText("Status: Recording....");
         //timer.scheduleAtFixedRate(task, 0, 1000);
     }
-    public void stop(ActionEvent e){
+    public void stop(ActionEvent e) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         microphone.stopRecording();
         timer.stopTimer();
         status.setText("Status: Stopped Recording....");
+        getRecording();
         //timer.cancel();
     }
+
+    public void playPause(ActionEvent e){
+        if(play){
+            clip.stop();
+            play = false;
+        }
+        else {
+            clip.start();
+            play = true;
+        }
+        if (clip.getMicrosecondLength() == clip.getMicrosecondPosition()){
+            clip.setMicrosecondPosition(0);
+        }
+    }
+     public void getRecording() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        recording = new File(path);
+        audioStream = AudioSystem.getAudioInputStream(recording);
+        clip = AudioSystem.getClip();
+        clip.open(audioStream);
+     }
+
+
 }

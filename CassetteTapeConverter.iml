@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javafx-swt" level="project" />
+    <orderEntry type="library" name="GroupDocs.Metadata" level="project" />
+    <orderEntry type="library" name="jave-1.0.2" level="project" />
   </component>
 </module>
