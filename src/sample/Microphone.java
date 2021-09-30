@@ -1,5 +1,6 @@
 package sample;
 
+import it.sauronsoftware.jave.EncoderException;
 import javafx.scene.control.ChoiceBox;
 
 import javax.sound.sampled.*;
@@ -11,18 +12,22 @@ import java.util.HashMap;
 
 
 public class Microphone {
+    private static final int CHANNNEL = 2;
+    private static final int BIT_RATE = 320000;
+    private static final int SAMPLE_RATE = 44100;
     private TargetDataLine targetLine = null;
     private HashMap<String, Line> targetLines = null;
-    private String path;
+    private String wavPath;
+    private String mp3Path = "converted/recording.mp3";
 
     public Microphone(){
-        this.path = "record.wav";
+        this.wavPath = "record.wav";
         targetLines = getTargetLines();
         targetLine = (TargetDataLine) targetLines.get("Default");
     }
 
-    public Microphone(String path){
-        this.path = path;
+    public Microphone(String wavPath){
+        this.wavPath = wavPath;
         targetLines = getTargetLines();
         targetLine = (TargetDataLine) targetLines.get("Default");
     }
@@ -67,19 +72,19 @@ public class Microphone {
     }
 
     public void startRecording() throws LineUnavailableException {
-        System.out.println("Starting Recording");
+        //System.out.println("Starting Recording");
         targetLine.open();
         targetLine.start();
         Thread audioRecorderThread = new Thread(){
             @Override
             public void run(){
                 AudioInputStream recordingStream  = new AudioInputStream(targetLine);
-                File outputFile = new File(path);
+                File outputFile = new File(wavPath);
                 try{
                     AudioSystem.write(recordingStream, AudioFileFormat.Type.WAVE, outputFile);
                 }
                 catch (IOException ex){
-                    System.out.println(ex);
+                    //System.out.println(ex);
                 }
             }
         };
@@ -88,8 +93,13 @@ public class Microphone {
     }
 
     public void stopRecording(){
-        System.out.println("Stopped Recording");
+        //System.out.println("Stopped Recording");
         targetLine.stop();
         targetLine.close();
+        try {
+            AudioUtils.wav2mp3(wavPath, mp3Path, BIT_RATE, CHANNNEL, SAMPLE_RATE);
+        } catch (EncoderException e) {
+            e.printStackTrace();
+        }
     }
 }

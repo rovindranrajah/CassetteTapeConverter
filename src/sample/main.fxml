@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -16,7 +17,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem fx:id="saveWindow" mnemonicParsing="false" onAction="#openSaveWindow" text="Save" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -61,5 +62,6 @@
             <Font size="23.0" />
          </font>
       </Label>
+      <ProgressBar fx:id="musicProgress" layoutY="202.0" prefHeight="18.0" prefWidth="729.0" progress="0.0" />
     </children>
 </AnchorPane>
