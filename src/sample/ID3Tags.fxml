@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="628.0" prefWidth="735.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ID3Tags">
     <children>
         <Button fx:id="playButton" layoutX="67.0" layoutY="95.0" mnemonicParsing="false" onAction="#playMusic" prefHeight="26.0" prefWidth="69.0" text="PLAY" />
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutY="5.0" prefHeight="18.0" prefWidth="776.0" text="ID3 Tags" textAlignment="CENTER">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutY="5.0" prefHeight="18.0" prefWidth="776.0" text="Song Label" textAlignment="CENTER">
             <font>
                 <Font name="System Bold" size="35.0" />
             </font>
