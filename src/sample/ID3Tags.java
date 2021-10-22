@@ -7,10 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.commons.io.FileUtils;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -31,7 +31,7 @@ public class ID3Tags implements Initializable {
     private String folder = "Final";
     private MediaPlayer player;
     private boolean play = false;
-    private File directory = new File("converted");
+    private File directory = new File("splitted");
     private File[] files;
     private ArrayList<File> songs = new ArrayList<File>();
     private int songNumber=0;
@@ -117,7 +117,7 @@ public class ID3Tags implements Initializable {
         //artistField.clear();
         //yearField.clear();
         trackField.clear();
-        genreField.clear();
+        //genreField.clear();
         resetProgress();
         try{
             stopTimer();

@@ -4,8 +4,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class CassetteTapeConverter extends Application {
     @Override
@@ -16,6 +19,14 @@ public class CassetteTapeConverter extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+    }
+    @Override
+    public void stop() throws IOException, InterruptedException {
+        TimeUnit.SECONDS.sleep(1);
+        FileUtils.deleteDirectory(new File("rawFile"));
+        //FileUtils.deleteDirectory(new File("splitted"));
+        //FileUtils.deleteDirectory(new File("converted"));
+        //System.out.print(new File("converted/recording.mp3").delete());
     }
 
     public static void main(String[] args) {

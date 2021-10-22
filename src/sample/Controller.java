@@ -45,9 +45,6 @@ public class Controller implements Initializable {
     File directory = new File(dir);
     String path = "recording.wav";
     Microphone microphone = new Microphone(dir + "/" + path);
-    File recording;
-    AudioInputStream audioStream;
-    Clip clip;
     MediaPlayer player;
     boolean play = false;
     Timer progressTimer;
@@ -75,7 +72,7 @@ public class Controller implements Initializable {
         //timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    public void stop(ActionEvent e) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public void stop(ActionEvent e) throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
         microphone.stopRecording();
         timer.stopTimer();
         status.setText("Status: Stopped Recording....");

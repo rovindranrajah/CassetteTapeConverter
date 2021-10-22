@@ -12,9 +12,9 @@ import java.util.HashMap;
 
 
 public class Microphone {
-    private static final int CHANNNEL = 2;
-    private static final int BIT_RATE = 320000;
-    private static final int SAMPLE_RATE = 44100;
+    public static final int CHANNEL = 2;
+    public static final int BIT_RATE = 320000;
+    public static final int SAMPLE_RATE = 44100;
     private TargetDataLine targetLine = null;
     private HashMap<String, Line> targetLines = null;
     private String wavPath;
@@ -92,14 +92,16 @@ public class Microphone {
         audioRecorderThread.start();
     }
 
-    public void stopRecording(){
+    public void stopRecording() throws InterruptedException {
         //System.out.println("Stopped Recording");
         targetLine.stop();
         targetLine.close();
+
         try {
-            AudioUtils.wav2mp3(wavPath, mp3Path, BIT_RATE, CHANNNEL, SAMPLE_RATE);
+            AudioUtils.wav2mp3(wavPath, mp3Path, BIT_RATE, CHANNEL, SAMPLE_RATE);
         } catch (EncoderException e) {
             e.printStackTrace();
         }
+        new Thread(new Processor()).start();
     }
 }
