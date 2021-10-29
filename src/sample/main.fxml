@@ -22,7 +22,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem fx:id="settingsButton" mnemonicParsing="false" onAction="#openSettingsWindow" text="Settings" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -52,11 +52,6 @@
             <Font size="23.0" />
          </font></Label>
       <Label fx:id="milliLabel" layoutX="673.0" layoutY="57.0" text="00" />
-      <Label fx:id="status" layoutX="196.0" layoutY="211.0" prefHeight="30.0" prefWidth="327.0" text="Status: Idle" visible="false">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
       <Label layoutX="600.0" layoutY="54.0" text=":    : ">
          <font>
             <Font size="23.0" />

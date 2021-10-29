@@ -14,12 +14,14 @@ import java.nio.file.StandardCopyOption;
 
 public class Processor implements Runnable{
     static int trackCount;
-    private final static String DEFAULT_WAV_FILE2 = "rawFile/recording.wav";
+    private final static String DEFAULT_WAV_FILE2 = "System/rawFile/recording.wav";
     private final static String DEFAULT_TRACK_FILE = "TRACK";
     private final static String DEFAULT_TRACK_EXT = "mp3";
-    private final static String OUTPUT_FOLDER = "splitted";
+    private final static String OUTPUT_FOLDER = "System/splitted";
     private final static int SAMPLE_BITS = 16; // Sample Bits
     private final static int MAX_BUFFER_SIZE_IN_MB = 40;
+    public static double threshold = -72;
+    public static int duration = 6;
 
     Processor(){}
     private void splitBySilentArea(AudioFormat targetFormat, AudioInputStream din)
@@ -57,10 +59,9 @@ public class Processor implements Runnable{
             float[] samples = AudioUtils.convertBytesToSamples(buf, b);
 
             currentSPL = AudioUtils.getSoundPressureLevel(samples);
-            double threshold = -72;
-            int duration = 6;
+
             boolean silence = currentSPL < threshold;
-//				System.out.println(currentSPL);
+
             if (silence) {
                 counter++;
                 if (counter >= duration * MULTIPLIER) {

@@ -10,8 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.io.FileUtils;
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
@@ -28,10 +26,10 @@ public class ID3Tags implements Initializable {
     @FXML private Label totalTracks, currentTrack;
     @FXML private ProgressBar musicProgress;
     private ID3v2 tag = new ID3v24Tag();
-    private String folder = "Final";
+    private String saveDirectory;
     private MediaPlayer player;
     private boolean play = false;
-    private File directory = new File("splitted");
+    private File directory = new File("System/splitted");
     private File[] files;
     private ArrayList<File> songs = new ArrayList<File>();
     private int songNumber=0;
@@ -40,8 +38,10 @@ public class ID3Tags implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        saveDirectory=Controller.saveDirectory;
+        albumField.setText(saveDirectory);
         files = directory.listFiles();
-        new File(folder).mkdir();
+        new File(saveDirectory).mkdir();
         if(files!=null){
             for(File file : files){
                 songs.add(file);
@@ -90,7 +90,7 @@ public class ID3Tags implements Initializable {
         tag.setYear(yearField.getText());
         tag.setTrack(trackField.getText());
         tag.setGenreDescription(genreField.getText());
-        file.save(folder+"/"+titleField.getText()+".mp3");
+        file.save(saveDirectory+"/"+titleField.getText()+".mp3");
         if(nextTrack()){
             clearField();
         }

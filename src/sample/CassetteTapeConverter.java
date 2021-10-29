@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.apache.commons.io.FileUtils;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -21,13 +21,11 @@ public class CassetteTapeConverter extends Application {
         stage.show();
     }
     @Override
-    public void stop() throws IOException, InterruptedException {
-        TimeUnit.SECONDS.sleep(1);
-        FileUtils.deleteDirectory(new File("rawFile"));
-        //FileUtils.deleteDirectory(new File("splitted"));
-        //FileUtils.deleteDirectory(new File("converted"));
-        //System.out.print(new File("converted/recording.mp3").delete());
+    public void stop() throws IOException {
+        Runtime.getRuntime().exec("java -jar FileDeletor.jar");
     }
+
+
 
     public static void main(String[] args) {
         launch();

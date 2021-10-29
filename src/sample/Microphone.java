@@ -18,7 +18,7 @@ public class Microphone {
     private TargetDataLine targetLine = null;
     private HashMap<String, Line> targetLines = null;
     private String wavPath;
-    private String mp3Path = "converted/recording.mp3";
+    private String mp3Path = "System/converted/recording.mp3";
 
     public Microphone(){
         this.wavPath = "record.wav";
