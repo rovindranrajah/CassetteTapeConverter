@@ -14,8 +14,6 @@
       <element id="extracted-dir" path="$USER_HOME$/Desktop/mp3agic-0.9.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Desktop/jave-1.0.2/jave-1.0.2.jar" path-in-jar="/" />
       <element id="library" level="project" name="javafx-swt" />
-      <element id="library" level="project" name="jave-1.0.2" />
-      <element id="library" level="project" name="mp3agic-0.9.0" />
       <element id="file-copy" path="D:/JavaFX/javafx-sdk-16/bin/api-ms-win-core-console-l1-1-0.dll" />
       <element id="file-copy" path="D:/JavaFX/javafx-sdk-16/bin/api-ms-win-core-console-l1-2-0.dll" />
       <element id="file-copy" path="D:/JavaFX/javafx-sdk-16/bin/api-ms-win-core-datetime-l1-1-0.dll" />

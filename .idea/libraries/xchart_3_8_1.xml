@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jave-1.0.2">
+  <library name="xchart-3.8.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../External Libraries/jave-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../External Libraries/xchart-3.8.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

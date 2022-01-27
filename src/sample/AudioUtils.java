@@ -5,12 +5,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.SequenceInputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.LinkedList;
 
 
 public class AudioUtils {
@@ -22,6 +20,49 @@ public class AudioUtils {
         Media media = new Media(recording.toURI().toString());
         MediaPlayer player = new MediaPlayer(media);
         return player;
+    }
+
+    public static void mergeTracks(String name, LinkedList<File> songs){
+        System.out.println(name);
+        LinkedList<File> tempSongs = new LinkedList<File>();
+       while (true){
+           if(songs.size() == 0) {
+               break;
+           }
+           try {
+                int temp;
+
+                tempSongs.add(songs.poll());
+                tempSongs.add(songs.poll());
+                FileInputStream fistream1 = new FileInputStream("System/splitted/" + tempSongs.peekFirst().getName());
+                FileInputStream fistream2 = new FileInputStream("System/splitted/" + tempSongs.peekLast().getName());
+                SequenceInputStream sistream = new SequenceInputStream(fistream1, fistream2);
+                FileOutputStream fostream = new FileOutputStream("System/splitted/" + name);
+
+
+                while((temp = sistream.read()) != -1)
+                {
+                    fostream.write(temp);
+                }
+                fostream.close();
+                sistream.close();
+                fistream1.close();
+                fistream2.close();
+            } catch (FileNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+           tempSongs.poll();
+
+           //System.out.println(file.delete());
+           /*file = new File("System/splitted/" + tempSongs.poll());
+           file.delete();*/
+
+        }
     }
 
     /**
@@ -124,9 +165,9 @@ public class AudioUtils {
     public static File appendBytesToFile(byte[] data, String fileName) {
         String timestamp = "" + System.currentTimeMillis();
         File mainFile = new File(fileName);
-        File tempFile1 = new File("temp_1_" + timestamp);
-        File tempFile2 = new File("temp_2_" + timestamp);
-        File combFile = new File("temp_c_" + timestamp);
+        File tempFile1 = new File(Microphone.dir + "/temp_1_" + timestamp);
+        File tempFile2 = new File(Microphone.dir + "/temp_2_" + timestamp);
+        File combFile = new File(Microphone.dir + "/temp_c_" + timestamp);
 
         try {
             Files.copy(mainFile.toPath(), tempFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);

@@ -41,7 +41,7 @@ public class Controller implements Initializable {
     File directory = new File(dir);
     String path = "recording.wav";
     public static String saveDirectory;
-    Microphone microphone = new Microphone(dir + "/" + path);
+    Microphone microphone = new Microphone(path, dir);
     MediaPlayer player;
     boolean play = false;
     Timer progressTimer;
@@ -79,7 +79,7 @@ public class Controller implements Initializable {
             if(result.get() == ButtonType.OK){
                 timer.startTimer();
                 startButton.setDisable(true);
-                stopButton.setDisable(false);
+                stopButton.setDisable(false);   
                 playPause.setDisable(true);
                 microphone.startRecording();
             }
@@ -176,6 +176,16 @@ public class Controller implements Initializable {
         saveWin.show();
     }
 
+    public void openMergeWindow() throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("test.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage saveWin = new Stage();
+        saveWin.setTitle("Track Merging");
+        saveWin.setScene(scene);
+        saveWin.setResizable(false);
+        saveWin.show();
+    }
     public void openSettingsWindow() throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("settings.fxml"));

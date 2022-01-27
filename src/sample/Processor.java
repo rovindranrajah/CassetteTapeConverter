@@ -115,7 +115,7 @@ public class Processor implements Runnable{
             track_started = false;
 
         } else {
-            File wavTemp = new File(DEFAULT_TRACK_FILE + "_" + trackCount + ".wav");
+            File wavTemp = new File("System/" + DEFAULT_TRACK_FILE + "_" + trackCount + ".wav");
             if(wavTemp.exists()) {
                 wavTemp.delete();
             }
@@ -128,7 +128,7 @@ public class Processor implements Runnable{
 
         String trackName = DEFAULT_TRACK_FILE + "_" + index + "." + DEFAULT_TRACK_EXT;
 
-        String wavTemp = DEFAULT_TRACK_FILE + "_" + index + ".wav";
+        String wavTemp = "System/" + DEFAULT_TRACK_FILE + "_" + index + ".wav";
 
         try {
             File tempFile = new File(wavTemp);
