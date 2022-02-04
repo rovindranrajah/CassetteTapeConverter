@@ -56,7 +56,7 @@ public class AudioUtils {
                 e1.printStackTrace();
             }
 
-           tempSongs.poll();
+           tempSongs.poll().delete();
 
            //System.out.println(file.delete());
            /*file = new File("System/splitted/" + tempSongs.poll());

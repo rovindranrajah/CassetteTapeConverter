@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class Main implements Initializable {
+public class TrackMerger implements Initializable {
     private File directory = new File("System/splitted");
     private File[] files;
     private LinkedList<File> songs = new LinkedList<File>();
@@ -51,9 +51,14 @@ public class Main implements Initializable {
                 }
             }
         }
-
+       // ((Stage)root.getScene().getWindow()).close();
+        for(MediaPlayer player : players){
+            player.dispose();
+        }
         AudioUtils.mergeTracks(name, selectedSongs);
-        setRoot(root);
+
+
+        //setRoot(root);
 
     }
 

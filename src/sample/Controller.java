@@ -178,7 +178,7 @@ public class Controller implements Initializable {
 
     public void openMergeWindow() throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("test.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("merger.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage saveWin = new Stage();
         saveWin.setTitle("Track Merging");
