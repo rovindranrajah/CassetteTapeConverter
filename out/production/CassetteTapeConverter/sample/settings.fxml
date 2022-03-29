@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="452.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Settings">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="46.0" prefWidth="600.0" text="SETTINGS">
@@ -31,5 +30,12 @@
       <TextArea editable="false" layoutX="22.0" layoutY="300.0" prefHeight="79.0" prefWidth="210.0" text="Set the sound duration in seconds&#10;that indicates the end of audio&#10;being recorded for auto stop.&#10;(Lower value = it will stop easily)" visible="false" />
       <Button fx:id="cancelButton" layoutX="509.0" layoutY="402.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
       <Button fx:id="okayButton" layoutX="433.0" layoutY="402.0" mnemonicParsing="false" onAction="#okay" prefHeight="26.0" prefWidth="52.0" text="Okay" />
+      <Label layoutX="22.0" layoutY="267.0" text="Stop duration (s):">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="durationField" layoutX="300.0" layoutY="266.0" prefHeight="26.0" prefWidth="158.0" />
+      <TextArea editable="false" layoutX="22.0" layoutY="300.0" prefHeight="79.0" prefWidth="210.0" text="Time taken for the recording to stop&#10;automatically after the tape &#10;has ended.&#10;" />
    </children>
 </AnchorPane>

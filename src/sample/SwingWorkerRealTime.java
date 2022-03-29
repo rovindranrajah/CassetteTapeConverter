@@ -1,5 +1,6 @@
 package sample;
 
+import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import org.knowm.xchart.XYChart;
  * Creates a real-time chart using SwingWorker
  */
 public class SwingWorkerRealTime {
-
+    JFrame frame;
     MySwingWorker mySwingWorker;
     SwingWrapper<XYChart> sw;
     XYChart chart;
@@ -38,7 +39,14 @@ public class SwingWorkerRealTime {
             sw = new SwingWrapper<XYChart>(chart);
             //sw.displayChart();
 
-            JFrame frame = sw.displayChart();
+
+            frame = sw.displayChart();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+            Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
+            int x = (int) rect.getMaxX() - frame.getWidth();
+            int y = 0;
+            frame.setLocation(x, y);
             javax.swing.SwingUtilities.invokeLater(
                     ()->frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
             );
@@ -58,6 +66,10 @@ public class SwingWorkerRealTime {
 
     public double getSPL(){
         return cSPL;
+    }
+
+    public void close() {
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
     private class MySwingWorker extends SwingWorker<Boolean, double[]> {
@@ -126,6 +138,7 @@ public class SwingWorkerRealTime {
             }
 
         }
+
     }
 }
 

@@ -12,14 +12,17 @@ import java.util.ResourceBundle;
 public class Settings implements Initializable {
     @FXML private Button cancelButton, okayButton;
     @FXML private TextField thresholdField;
+    @FXML private TextField durationField;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         thresholdField.setText(Double.toString(Processor.threshold));
+        durationField.setText(Integer.toString(Microphone.duration));
     }
 
     public void okay(){
         Processor.threshold = Double.parseDouble(thresholdField.getText());
+        Microphone.duration = Integer.parseInt(durationField.getText());
         Stage stage = (Stage) okayButton.getScene().getWindow();
         stage.close();
     }

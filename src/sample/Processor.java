@@ -10,13 +10,15 @@ import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class Processor implements Runnable{
     static int trackCount;
     private final static String DEFAULT_WAV_FILE2 = "System/rawFile/recording.wav";
     private final static String DEFAULT_TRACK_FILE = "TRACK";
-    private final static String DEFAULT_TRACK_EXT = "mp3";
+    private final static String DEFAULT_TRACK_EXT = "wav";
     private final static String OUTPUT_FOLDER = "System/splitted";
     private final static int SAMPLE_BITS = 16; // Sample Bits
     private final static int MAX_BUFFER_SIZE_IN_MB = 40;
@@ -31,7 +33,7 @@ public class Processor implements Runnable{
         int MULTIPLIER=1;
         long counter = 0;
         double currentSPL = 0;
-        byte[] buf = new byte[88200];
+        byte[] buf = new byte[(int)din.getFormat().getFrameRate() * din.getFormat().getChannels()]; //CHECK - The byte size is mostly wrong
         boolean noise = true;
         boolean track_started = false;
 
@@ -64,7 +66,7 @@ public class Processor implements Runnable{
 
             if (silence) {
                 counter++;
-                if (counter >= duration * MULTIPLIER) {
+                if (counter >= duration * MULTIPLIER) { // CHECK - Not really 6 seconds
                     if (!noise) {
                         String trackName = saveTrack(writer, trackCount, track_started, true);
                         track_started = false;
@@ -75,7 +77,7 @@ public class Processor implements Runnable{
                     else {
                     }
                     counter = 0;
-                    noise = true;
+                    noise = true; //CHECK - useless variable
                 }
                 else {
                     writer.write(buf, 0, b);
@@ -127,11 +129,11 @@ public class Processor implements Runnable{
     private String saveTrack(WaveWriter currentWriter, int index, boolean append, boolean complete) {
 
         String trackName = DEFAULT_TRACK_FILE + "_" + index + "." + DEFAULT_TRACK_EXT;
-
+        new File(OUTPUT_FOLDER).mkdirs();
         String wavTemp = "System/" + DEFAULT_TRACK_FILE + "_" + index + ".wav";
 
         try {
-            File tempFile = new File(wavTemp);
+            File tempFile = new File(wavTemp); //CHECK-Change logic - if and else if instead of if if
             if (append) {
                 File temp = AudioUtils.appendBytesToFile(currentWriter.getData(), wavTemp);
                 Files.copy(temp.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -139,14 +141,16 @@ public class Processor implements Runnable{
                 AudioUtils.saveBytesToFile(currentWriter.getData(), wavTemp);
             }
             if (complete) {
-                AudioUtils.wav2mp3(wavTemp, OUTPUT_FOLDER + File.separator + trackName, Microphone.BIT_RATE, Microphone.CHANNEL, Microphone.SAMPLE_RATE);
+                //AudioUtils.wav2mp3(wavTemp, OUTPUT_FOLDER + File.separator + trackName, Microphone.BIT_RATE, Microphone.CHANNEL, Microphone.SAMPLE_RATE);
+               // File src = new File(wavTemp);
+                //File dst = new File(OUTPUT_FOLDER + File.separator + trackName);
+                Path src = Paths.get(wavTemp);
+                Path dst = Paths.get(OUTPUT_FOLDER + File.separator + trackName);
+
+                Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
                 tempFile.deleteOnExit();
             }
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InputFormatException e) {
-            e.printStackTrace();
-        } catch (EncoderException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,7 +172,7 @@ public class Processor implements Runnable{
             if (in != null) {
                 AudioFormat baseFormat = in.getFormat();
                 AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                        baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2,
+                        baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getFrameSize(),
                         baseFormat.getSampleRate(), false);
                 din = AudioSystem.getAudioInputStream(decodedFormat, in);
                 splitBySilentArea(decodedFormat, din);

@@ -9,60 +9,132 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 
 public class AudioUtils {
     public static MediaPlayer getRecording(File file) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         File recording = file;
-        /*audioStream = AudioSystem.getAudioInputStream(recording);
-        clip = AudioSystem.getClip();
-        clip.open(audioStream);*/
         Media media = new Media(recording.toURI().toString());
         MediaPlayer player = new MediaPlayer(media);
         return player;
     }
 
     public static void mergeTracks(String name, LinkedList<File> songs){
-        System.out.println(name);
-        LinkedList<File> tempSongs = new LinkedList<File>();
-       while (true){
+        int count=0;
+        final int TIMEOUT = 10;
+
+
+        while (true){
            if(songs.size() == 0) {
                break;
            }
-           try {
-                int temp;
+           else if (songs.size() == 2){
 
-                tempSongs.add(songs.poll());
-                tempSongs.add(songs.poll());
-                FileInputStream fistream1 = new FileInputStream("System/splitted/" + tempSongs.peekFirst().getName());
-                FileInputStream fistream2 = new FileInputStream("System/splitted/" + tempSongs.peekLast().getName());
-                SequenceInputStream sistream = new SequenceInputStream(fistream1, fistream2);
-                FileOutputStream fostream = new FileOutputStream("System/splitted/" + name);
+               try {
+                   AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File("System/splitted/" + songs.get(0).getName()));
+                   AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File("System/splitted/" + songs.get(1).getName()));
 
+                   AudioInputStream appendedFiles =
+                           new AudioInputStream(
+                                   new SequenceInputStream(clip1, clip2),
+                                   clip1.getFormat(),
+                                   clip1.getFrameLength() + clip2.getFrameLength());
 
-                while((temp = sistream.read()) != -1)
-                {
-                    fostream.write(temp);
-                }
-                fostream.close();
-                sistream.close();
-                fistream1.close();
-                fistream2.close();
-            } catch (FileNotFoundException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+                   AudioSystem.write(appendedFiles, AudioFileFormat.Type.WAVE, new File("System/splitted/" + name));
+                   clip1.close();
+                   clip2.close();
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+               System.gc();
+               try {
+                   TimeUnit.MILLISECONDS.sleep(TIMEOUT);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               songs.poll().delete();
+               songs.poll().delete();
+           }
+           else{
+               try {
+                   AudioInputStream clip1 = AudioSystem.getAudioInputStream(new File("System/splitted/" + songs.get(songs.size()-2).getName()));
+                   AudioInputStream clip2 = AudioSystem.getAudioInputStream(new File("System/splitted/" + songs.get(songs.size()-1).getName()));
 
-           tempSongs.poll().delete();
+                   AudioInputStream appendedFiles =
+                           new AudioInputStream(
+                                   new SequenceInputStream(clip1, clip2),
+                                   clip1.getFormat(),
+                                   clip1.getFrameLength() + clip2.getFrameLength());
 
-           //System.out.println(file.delete());
-           /*file = new File("System/splitted/" + tempSongs.poll());
-           file.delete();*/
+                   AudioSystem.write(appendedFiles, AudioFileFormat.Type.WAVE, new File("System/splitted/temp_" + count + ".wav"));
+                   clip1.close();
+                   clip2.close();
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+               System.gc();
+               try {
+                   TimeUnit.MILLISECONDS.sleep(TIMEOUT);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               songs.pollLast().delete();
+               songs.pollLast().delete();
+               songs.addLast(new File("System/splitted/temp_" + count + ".wav"));
+               count++;
+           }
 
         }
+    }
+
+    public static void splitTrack(File file, double splitTime) throws IOException, UnsupportedAudioFileException {
+        String name = file.getName().replaceFirst("[.][^.]+$", "");
+        final int TIMEOUT = 10;
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+        int bps = audioInputStream.getFormat().getSampleSizeInBits();
+        int n = audioInputStream.getFormat().getChannels();
+        float f = audioInputStream.getFormat().getSampleRate();
+        double time = splitTime;
+        //System.out.println(time);
+        int length = (int)((f*n*(bps/8))*time);
+        //System.out.println("Total: " + audioInputStream.getFrameLength()*audioInputStream.getFormat().getFrameSize());
+       // System.out.println(f*n*(bps/8));
+       // System.out.println(audioInputStream.getFormat().getFrameSize());
+        byte[] b = new byte[length];
+        audioInputStream.read(b);
+
+        AudioInputStream stream = new AudioInputStream(
+                new ByteArrayInputStream(b),
+                new AudioFormat(f, bps, n, true, false), (length/audioInputStream.getFormat().getFrameSize()));
+        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new File("System/splitted/" + name + "_1.wav"));
+
+        //audioInputStream.read(b, 352800*5+44100, (int)audioInputStream.getFrameLength());
+        int length2 = (int)audioInputStream.getFrameLength()*audioInputStream.getFormat().getFrameSize()-length;
+        byte[] b2 = new byte[length2];
+       // System.out.println(length2);
+        audioInputStream.read(b2);
+        AudioInputStream stream2 = new AudioInputStream(
+                new ByteArrayInputStream(b2),
+                new AudioFormat(f, bps, n, true, false), (length2/audioInputStream.getFormat().getFrameSize()));
+        AudioSystem.write(stream2,AudioFileFormat.Type.WAVE, new File("System/splitted/" + name + "_2.wav"));
+        audioInputStream.close();
+
+        System.gc();
+        try {
+            TimeUnit.MILLISECONDS.sleep(TIMEOUT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        file.delete();
+    }
+    public static float getDuration(File file) throws Exception {
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+        AudioFormat format = audioInputStream.getFormat();
+        float durationInSeconds = audioInputStream.getFrameLength()/format.getFrameRate();
+        //System.out.println(format.getFrameRate());
+        //System.out.println("Filename: " +file.getName() + " FL: " + audioInputStream.getFrameLength() + " Seconds: " + durationInSeconds);
+        return (durationInSeconds*1000);
     }
 
     /**

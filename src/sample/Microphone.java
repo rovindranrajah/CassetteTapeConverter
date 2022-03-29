@@ -1,15 +1,19 @@
 package sample;
 
 import it.sauronsoftware.jave.EncoderException;
+import it.sauronsoftware.jave.InputFormatException;
+import javafx.application.Platform;
 import javafx.scene.control.ChoiceBox;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 //This class is used to set up the audio inputs, change the desired audio inputs, show the available audio inputs and also record and saves the file.
 
@@ -18,7 +22,8 @@ public class Microphone {
     public static final int CHANNEL = 2;
     public static final int BIT_RATE = 320000;
     public static final int SAMPLE_RATE = 44100;
-    private final static int MAX_BUFFER_SIZE_IN_MB = 40; // Max buffer size in memory to avoid out of memory error
+    public static int duration = 10;
+    private final static int MAX_BUFFER_SIZE_IN_MB = 1000; // Max buffer size in memory to avoid out of memory error
     private TargetDataLine targetLine = null;
     private HashMap<String, Line> targetLines = null;
     public static String dir;
@@ -80,20 +85,39 @@ public class Microphone {
     public void setTargetLine(String line) {
         targetLine = (TargetDataLine) targetLines.get(line);
     }
+    private AudioFormat WAVFormat() {
 
-    public void startRecording() throws LineUnavailableException {
+        int channels = 2;
+        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
+        float sampleRate = SAMPLE_RATE;
+        int frameSize = 4;
+        float frameRate = SAMPLE_RATE;
+        int sampleSizeInBits = 16;
+        boolean bigEndian = false;
+
+        return new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, frameSize, frameRate, bigEndian);
+
+    }
+    public void startRecording(Controller cls) throws LineUnavailableException {
         //System.out.println("Starting Recording");
 
         SwingWorkerRealTime swingWorkerRealTime = new SwingWorkerRealTime();
-        targetLine.open();
-        targetLine.start();
-        track_started=true;
+
         graphThread = new Thread() {
             @Override
             public void run() {
                 {
+                    try {
+                        targetLine.open();
+                    } catch (LineUnavailableException e) {
+                        e.printStackTrace();
+                    }
+                    targetLine.start();
+                    track_started=true;
                     WaveWriter writer = null;
                     long counter = 0;
+                    long start = 0;
+                    boolean stopInitialise = false;
                     byte[] buf = new byte[88200];
                     double currentSPL = 0;
                     try {
@@ -106,7 +130,17 @@ public class Microphone {
                     for (int b; (b = targetLine.read(buf, 0, buf.length)) > -1; ) {
                         try {
                             writer.write(buf, 0, b);
-                        } catch (IOException e1) {
+                            if(cls.audioPassthrough.isSelected()){
+                                AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(buf), WAVFormat(), buf.length / WAVFormat().getFrameSize());
+                                AudioFormat format = ais.getFormat();
+                                DataLine.Info info= new DataLine.Info(Clip.class, format);
+                                Clip clip = (Clip) AudioSystem.getLine(info);
+                                clip.open(ais);
+//this is for playing
+                                clip.start();
+                            }
+
+                        } catch (IOException | LineUnavailableException e1) {
                             e1.printStackTrace();
                         }
 
@@ -116,30 +150,35 @@ public class Microphone {
                         boolean silence = currentSPL < threshold;
 
                         if (silence) {
-                            counter++;
-                            if (counter >= 200) {
+                            if(!stopInitialise){
+                                start = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                                stopInitialise = true;
+                            }
+                            counter = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) - start;
+
+                            if (counter >= duration) {
+                               // System.out.println(duration);
+                                System.out.println("Auto Stop");
                                 try {
-                                    if (track_started) {
-                                        File file = AudioUtils.appendBytesToFile(writer.getData(), wavPath);
-                                        Files.copy(file.toPath(), new File(wavPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                                    } else {
-                                        AudioUtils.saveBytesToFile(writer.getData(), wavPath);
-                                    }
+                                    cls.stop();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (LineUnavailableException e) {
+                                    e.printStackTrace();
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                } catch (UnsupportedAudioFileException e) {
+                                    e.printStackTrace();
                                 }
-                                counter = 0;
-                                targetLine.stop();
-                                targetLine.close();
-                                Thread processor = new Thread(new Processor());
-                                processor.start();
-                                return;
+
                             }
                         } else {
                             counter = 0;
+                            stopInitialise = false;
                         }
 
                         if (stop) {
+
                             try {
                                 if (track_started) {
                                     File file = AudioUtils.appendBytesToFile(writer.getData(), wavPath);
@@ -153,6 +192,31 @@ public class Microphone {
                             counter = 0;
                             targetLine.stop();
                             targetLine.close();
+                            Thread processor = new Thread(new Processor());
+                            processor.start();
+                            try {
+                                AudioUtils.wav2mp3(wavPath, mp3Path, BIT_RATE, CHANNEL, SAMPLE_RATE);
+                                Platform.runLater(new Runnable(){
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            swingWorkerRealTime.close();
+                                            cls.loadRecording();
+                                        } catch (UnsupportedAudioFileException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (LineUnavailableException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } catch (InputFormatException e) {
+                                e.printStackTrace();
+                            } catch (EncoderException e) {
+                                e.printStackTrace();
+                            }
+                            stop=false;
                             return;
                         }
 
@@ -208,18 +272,18 @@ public class Microphone {
 
     }
 
-    public void stopRecording(){
+    public void stopRecording() throws InterruptedException {
         //System.out.println("Stopped Recording");
         //graphThread.interrupt();
         stop=true;
-        targetLine.stop();
-        targetLine.close();
-
+        /*targetLine.stop();
+        targetLine.close();*/
+        /*TimeUnit.SECONDS.sleep((long)10);
         try {
             AudioUtils.wav2mp3(wavPath, mp3Path, BIT_RATE, CHANNEL, SAMPLE_RATE);
         } catch (EncoderException e) {
             e.printStackTrace();
-        }
-        new Thread(new Processor()).start();
+        }*/
+        //new Thread(new Processor()).start();
     }
 }
