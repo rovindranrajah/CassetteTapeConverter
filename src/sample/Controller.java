@@ -37,6 +37,10 @@ import java.util.concurrent.TimeUnit;
 public class Controller implements Initializable {
     @FXML
     private ChoiceBox<String> audioLine;
+    /*@FXML
+    private AnchorPane anchorPane;
+    @FXML
+    private BorderPane borderPane;*/
     @FXML
     public Label hourLabel, minuteLabel, secondLabel, milliLabel,volume2;
     @FXML private ProgressBar musicProgress;
@@ -77,6 +81,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+       // stopButton.prefWidthProperty().bind(anchorPane.widthProperty());
+
+        //anchorPane.prefWidthProperty().bind(borderPane.widthProperty());
         stopButton.setDisable(true);
         playPause.setDisable(true);
         volumeSlider.setDisable(true);
@@ -124,9 +131,49 @@ public class Controller implements Initializable {
             //alert.show();
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get() == ButtonType.OK){
-                player.stop();
-                player.dispose();
-                closePlayers();
+                try {
+                    player.stop();
+                    player.dispose();
+                    closePlayers();
+                    players.clear();
+                    buttons.clear();
+                    sliders.clear();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                File source = new File("System/splitted");
+                File[] files;
+                if(source.exists()){
+                    files = source.listFiles();
+                    for(File file : files){
+                        file.delete();
+                    }
+                }
+
+                source = new File("System/rawFile");
+                if(source.exists()){
+                    files = source.listFiles();
+                    for(File file : files){
+                        file.delete();
+                    }
+                }
+
+                source = new File("System/converted");
+                if(source.exists()){
+                    files = source.listFiles();
+                    for(File file : files){
+                        file.delete();
+                    }
+                }
+
+                source = new File("System/mp3");
+                if(source.exists()){
+                    files = source.listFiles();
+                    for(File file : files){
+                        file.delete();
+                    }
+                }
                 recorded=false;
                 timer.startTimer();
                 startButton.setDisable(true);
@@ -134,6 +181,7 @@ public class Controller implements Initializable {
                 playPause.setDisable(true);
                 volumeSlider.setDisable(true);
                 statusLabel.setText("Recording...");
+                statusProgressBar.setProgress(-1);
                 microphone.startRecording(this);
             }
 
@@ -249,6 +297,46 @@ public class Controller implements Initializable {
     public void stopTimer() {
         progressTimer.cancel();
         progressTimer.purge();
+    }
+    public void reprocessTracks(){
+        statusLabel.setText("Reprocessing Audio...");
+        statusProgressBar.setProgress(-1);
+        try {
+            closePlayers();
+            players.clear();
+            buttons.clear();
+            sliders.clear();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        File source = new File("System/splitted");
+        File[] files = source.listFiles();
+        for(File file : files){
+            file.delete();
+        }
+        Thread processor = new Thread(new Processor());
+        processor.start();
+        observer = new Timer();
+        TimerTask reprocessTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(!processor.isAlive()){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            statusProgressBar.setProgress(1);
+                            statusLabel.setText("DONE REPROCESS!");
+                            setRoot(root);
+                        }
+                    });
+
+                    observer.cancel();
+                    observer.purge();
+                }
+            }
+        };
+        observer = new Timer();
+        observer.scheduleAtFixedRate(reprocessTask, 250, 250);
     }
     public void openSaveWindow() throws IOException, InterruptedException {
         TextInputDialog albumDialog = new TextInputDialog();

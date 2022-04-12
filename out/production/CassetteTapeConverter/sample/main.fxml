@@ -14,7 +14,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <MenuBar layoutY="1.0" prefHeight="26.0" prefWidth="729.0">
             <menus>
@@ -23,7 +24,11 @@
                         <MenuItem fx:id="settingsButton" mnemonicParsing="false" onAction="#openSettingsWindow" text="Settings" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit" />
+                <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                  <MenuItem fx:id="reprocessItem" mnemonicParsing="false" onAction="#reprocessTracks" text="Reprocess Tracks" />
+               </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" text="About" />
@@ -41,15 +46,18 @@
       <Label fx:id="hourLabel" layoutX="576.0" layoutY="38.0" prefHeight="34.0" prefWidth="27.0" text="00">
          <font>
             <Font size="23.0" />
-         </font></Label>
+         </font>
+      </Label>
       <Label fx:id="minuteLabel" layoutX="610.0" layoutY="38.0" scaleShape="false" text="00">
          <font>
             <Font size="23.0" />
-         </font></Label>
+         </font>
+      </Label>
       <Label fx:id="secondLabel" layoutX="642.0" layoutY="38.0" text="00">
          <font>
             <Font size="23.0" />
-         </font></Label>
+         </font>
+      </Label>
       <Label fx:id="milliLabel" layoutX="678.0" layoutY="40.0" text="00" />
       <Label layoutX="605.0" layoutY="37.0" text=":    : ">
          <font>
@@ -60,7 +68,8 @@
       <BorderPane fx:id="root" layoutX="29.0" layoutY="285.0" prefHeight="259.0" prefWidth="670.0" style="-fx-border-color: black;">
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-         </padding></BorderPane>
+         </padding>
+      </BorderPane>
       <Label layoutX="324.0" layoutY="241.0" text="Tracks">
          <font>
             <Font size="29.0" />

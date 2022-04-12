@@ -19,7 +19,7 @@ public class CassetteTapeConverter extends Application {
         controller.setStage(stage);
         stage.setTitle("Cassette Tape Converter");
         stage.setScene(scene);
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.show();
     }
     @Override

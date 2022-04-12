@@ -87,7 +87,22 @@ public class ID3Tags implements Initializable {
         try (Scanner rowScanner = new Scanner(line)) {
             rowScanner.useDelimiter(COMMA_DELIMITER);
             while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
+                String current = rowScanner.next();
+                if(current.length() !=0){
+                    if(current.charAt(0) == '\"'){
+                        //System.out.println("Need check");
+                        while(current.charAt(current.length()-1) != '\"'){
+                            current += ", " + rowScanner.next();
+                            //System.out.println("Concat");
+                        }
+                        StringBuilder sb = new StringBuilder(current);
+                        sb.deleteCharAt(0);
+                        sb.deleteCharAt(sb.length()-1);
+                        current = sb.toString();
+                    }
+                }
+
+                values.add(current);
             }
         }
         return values;

@@ -20,7 +20,7 @@
          </font>
       </Label>
       <TextField fx:id="thresholdField" layoutX="300.0" layoutY="127.0" prefHeight="26.0" prefWidth="158.0" />
-      <TextArea editable="false" layoutX="22.0" layoutY="161.0" prefHeight="79.0" prefWidth="210.0" text="Set the sound threshold level in dB&#10;that indicates silent for the audio &#10;to be splitted. &#10;(Lower value = easier to split tracks)" />
+      <TextArea editable="false" layoutX="22.0" layoutY="161.0" prefHeight="70.0" prefWidth="552.0" text="Set the sound threshold level in dB that indicates silent for the audio to be splitted. &#10;[IF ONE SONG GETS SPLIT TO MANY SONGS, DECREASE THE VALUE (-75, -80 etc)]&#10;[IF MANY SONGS IS MERGED TO ONE SONG, INCREASE THE VALUE (-65, -60 etc)]" />
       <Label layoutX="22.0" layoutY="267.0" text="Stop Duration (s):" visible="false">
          <font>
             <Font name="System Bold" size="16.0" />
@@ -36,6 +36,6 @@
          </font>
       </Label>
       <TextField fx:id="durationField" layoutX="300.0" layoutY="266.0" prefHeight="26.0" prefWidth="158.0" />
-      <TextArea editable="false" layoutX="22.0" layoutY="300.0" prefHeight="79.0" prefWidth="210.0" text="Time taken for the recording to stop&#10;automatically after the tape &#10;has ended.&#10;" />
+      <TextArea editable="false" layoutX="22.0" layoutY="300.0" prefHeight="79.0" prefWidth="552.0" text="Time taken for the recording to stop automatically after the tape has ended.&#10;[IF THE RECORDING STOPS BEFORE TAPE FINISHES, INCREASE THE VALUE (15, 20 etc)]&#10;[IF THE RECORDING CONTINUES AFTER TAPE FINISHES, DECREASE THE VALUE (5, 2 etc)]&#10;" />
    </children>
 </AnchorPane>
