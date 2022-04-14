@@ -2,6 +2,7 @@ package sample;
 
 import com.mpatric.mp3agic.*;
 
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -18,9 +19,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.font.LineMetrics;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -92,7 +92,7 @@ public class ID3Tags implements Initializable {
                     if(current.charAt(0) == '\"'){
                         //System.out.println("Need check");
                         while(current.charAt(current.length()-1) != '\"'){
-                            current += ", " + rowScanner.next();
+                            current += "," + rowScanner.next();
                             //System.out.println("Concat");
                         }
                         StringBuilder sb = new StringBuilder(current);
@@ -151,7 +151,38 @@ public class ID3Tags implements Initializable {
                 }
 
             });
+            Button exportCSV = new Button("Export CSV");
+            exportCSV.setOnAction(e-> {
+                Stage stage = new Stage();
+                stage.setTitle("Save CSV file");
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV File", "*.csv");
+                fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setTitle("Choose save location");
+                fileChooser.setInitialFileName("ID3Tags.csv");
+                File file = fileChooser.showSaveDialog(stage);
 
+                try {
+                    Writer writer = new FileWriter(file);
+
+                    for (int i=0; i<trackFields.size(); ++i) {
+                        writer.write("\""+titleFields.get(i).getText() + "\",\"");
+                        writer.write(artistFields.get(i).getText() + "\",\"");
+                        writer.write(albumFields.get(i).getText() + "\",\"");
+                        writer.write(genreFields.get(i).getText() + "\",\"");
+                        writer.write(yearFields.get(i).getText() + "\",\"");
+                        writer.write(trackFields.get(i).getText() + "\"");
+                        writer.write("\n");
+                    }
+
+                    writer.close();
+                }
+                catch (IOException e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+
+            });
 
             // Create JavaFX Controls (nodes) to add to the GridPane
             Label noLabel = new Label("No.");
@@ -325,11 +356,24 @@ public class ID3Tags implements Initializable {
                 }
             });
             grid.add(yearAuto, 5, lastRow, 1, 1);
+            Button trackAuto = new Button("Autofill");
+            trackAuto.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    int i=1;
+                    for(TextField t: trackFields){
+                        t.setText(Integer.toString(i++));
+                    }
+                }
+            });
+            grid.add(trackAuto, 6, lastRow, 1, 1);
             ScrollPane scrollPane = new ScrollPane();
             scrollPane.setContent(grid);
             root.setCenter(scrollPane);
-
-            root.setTop(importCSV);
+            HBox top = new HBox();
+            top.getChildren().add(importCSV);
+            top.getChildren().add(exportCSV);
+            root.setTop(top);
 
             root.setBottom(vBox);
             //vBox.setPadding(new Insets(2,0,2,0));

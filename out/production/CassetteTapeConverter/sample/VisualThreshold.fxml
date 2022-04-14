@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.embed.swing.SwingNode?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1230.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.VisualThresholdController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1160.0" minWidth="1160.0" prefWidth="1160.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="70.0" minWidth="60.0" prefWidth="70.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <SwingNode fx:id="graphArea" />
+      <Slider fx:id="slider" majorTickUnit="5.0" maxHeight="300.0" minHeight="300.0" minorTickCount="5" orientation="VERTICAL" prefHeight="300.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" />
+   </children>
+</GridPane>
