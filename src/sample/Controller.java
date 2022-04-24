@@ -37,10 +37,9 @@ import java.util.concurrent.TimeUnit;
 public class Controller implements Initializable {
     @FXML
     private ChoiceBox<String> audioLine;
-    /*@FXML
-    private AnchorPane anchorPane;
     @FXML
-    private BorderPane borderPane;*/
+    private MenuItem reprocessItem;
+
     @FXML
     public Label hourLabel, minuteLabel, secondLabel, milliLabel,volume2;
     @FXML private ProgressBar musicProgress;
@@ -86,6 +85,7 @@ public class Controller implements Initializable {
         //anchorPane.prefWidthProperty().bind(borderPane.widthProperty());
         stopButton.setDisable(true);
         playPause.setDisable(true);
+        reprocessItem.setDisable(true);
         volumeSlider.setDisable(true);
         new File("System").mkdir();
         directory.mkdir();
@@ -217,6 +217,7 @@ public class Controller implements Initializable {
     }*/
     public void loadRecording() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         startButton.setDisable(false);
+        reprocessItem.setDisable(false);
         stopButton.setDisable(true);
         playPause.setDisable(false);
         volumeSlider.setDisable(false);
@@ -387,6 +388,16 @@ public class Controller implements Initializable {
         t1.start();
 
 
+    }
+    public void helpWindow() throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(CassetteTapeConverter.class.getResource("Help.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage saveWin = new Stage();
+        saveWin.setTitle("How to Use");
+        saveWin.setScene(scene);
+        saveWin.setResizable(false);
+        saveWin.show();
     }
 
     public void saveWindow() throws IOException {

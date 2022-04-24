@@ -201,17 +201,6 @@ public class AudioUtils {
         return samples;
     }
 
-    public static byte[] convertSamplesToBytes(float[] samples) {
-        final byte[] byteBuffer = new byte[samples.length * 2];
-        int bufferIndex = 0;
-        for (int i = 0; i < byteBuffer.length;) {
-            final int x = (int) (samples[bufferIndex++] * 32767.0);
-            byteBuffer[i++] = (byte) x;
-            byteBuffer[i++] = (byte) (x >>> 8);
-        }
-        return byteBuffer;
-    }
-
     /**
      * Save bytes to new wav file
      * @param data

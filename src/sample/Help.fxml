@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <Label alignment="CENTER" prefHeight="70.0" prefWidth="706.0" text="Help" textAlignment="CENTER" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
+      <TextArea editable="false" prefHeight="411.0" prefWidth="703.0" text="The Cassette Tape Converter is a simple app that is able to convert cassette tape audio into mp3 files. The steps below &#10;are to guide on how to use the application.&#10;&#10;1) Plug in the cassette tape player into the device using an AUX cable. &#10;2) Use the microphone if your device has two ports or choose the Microphone-in option when plugged in if your &#10;    device has one port.&#10;3) Choose the desired audio input line if you wish to change (i.e. if a sound card is plugged in). Alternatively keep it &#10;    as 'Default.'&#10;4) Press play in the tape player and click on 'Record' at the same time. You can toggle 'Audio Passthrough' if you are &#10;    unable to hear the audio from the cassette tape on your device.&#10;5) Once the audio from tape has ended, the recording will stop within 10 seconds, alternatively, the 'Stop' button &#10;    can be clicked. &#10;    (Do note the duration and threshold depends on the values in the Settings menu)&#10;6) Play the individual tracks present in the bottom Tracks section and listen if all tracks are splitted accurately. If &#10;    any editing is required, it can be done within the same section.&#10;    - Select one sons and drag the slider to a particular location if you wish to split&#10;    - Select two or more songs to merge, if any&#10;    - Select one or more songs to delete, if any&#10;7) Alternatively, the songs can be reprocessed by changing the threshold value in Settings menu and clicking the &#10;    Reprocess menu.&#10;8) Click on 'Save' and type in an album name followed by the ID3 tags details of the songs. The songs can be &#10;    previewed one last time before saving. &#10;9) The saved album is present in the same directory as the application.&#10;" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextArea>
+   </center>
+</BorderPane>
